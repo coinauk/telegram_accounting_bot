@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账单明细 - {{ group_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .income { color: #28a745; }
+        .expense { color: #dc3545; }
+        .balance { color: #007bff; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .transaction-type {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .type-in {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .type-out {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        @media (max-width: 768px) {
+            .summary {
+                flex-direction: column;
+            }
+            .summary-item {
+                margin-bottom: 10px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ group_name }} - 账单明细</h1>
+        
+        <div class="summary">
+            <div class="summary-item">
+                <div>总入款</div>
+                <div class="value income">{{ total_income }}</div>
+            </div>
+            <div class="summary-item">
+                <div>总出款</div>
+                <div class="value expense">{{ total_expense }}</div>
+            </div>
+            <div class="summary-item">
+                <div>余额</div>
+                <div class="value balance">{{ balance }}</div>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户</th>
+                    <th>金额</th>
+                    <th>类型</th>
+                    <th>操作员</th>
+                    <th>时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr>
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.username }}</td>
+                    <td>{{ t.amount }}</td>
+                    <td>
+                        <span class="transaction-type {% if t.transaction_type == '入款' %}type-in{% else %}type-out{% endif %}">
+                            {{ t.transaction_type }}
+                        </span>
+                    </td>
+                    <td>{{ t.operator_name }}</td>
+                    <td>{{ t.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
